@@ -1,0 +1,24 @@
+body,
+html,
+#root,
+.App {
+  max-width: 100%;
+  min-height: 100vh;
+}
+
+.App {
+  display: flex;
+  flex-flow: column wrap;
+  background-color: whitesmoke;
+  align-items: center;
+  justify-content: center;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+h1.brand {
+  font-family: 'Londrina Solid', cursive;
+  font-weight: 400;
+  font-size: 3.75rem;
+  margin-bottom: 10px;
+}

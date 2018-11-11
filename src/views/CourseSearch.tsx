@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, H1, MenuItem } from '@blueprintjs/core/';
+import { Button, H1, MenuItem } from '@blueprintjs/core/';
 import {
   IItemRendererProps,
   ItemPredicate,
@@ -6,50 +6,57 @@ import {
 } from '@blueprintjs/select';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
+import { mockCourses } from 'src/models/mock/Course';
 import { highlightText } from 'src/util/Select';
-import ICourse from './ICourse';
+import ICourse from '../models/ICourse';
 
-class Search extends React.Component<RouteComponentProps<any>, {}> {
+interface ICourseSearchState {
+  courses: ICourse[];
+}
+
+class CourseSearch extends React.Component<
+  RouteComponentProps<any>,
+  ICourseSearchState
+> {
   private CourseSuggest = Suggest.ofType<ICourse>();
-  private noResults = (
-    <MenuItem
-      active={true}
-      disabled={true}
-      labelElement={<span>No courses found...</span>}
-    />
-  );
+  private noResults = <MenuItem disabled={true} text="No courses found..." />;
 
   constructor(props: RouteComponentProps<any>) {
     super(props);
+    this.state = {
+      courses: [],
+    };
     this.onCourseSelect = this.onCourseSelect.bind(this);
+  }
+
+  public componentDidMount() {
+    this.setState({
+      courses: mockCourses,
+    });
   }
 
   public render() {
     return (
       <div className="App">
         <H1 className="brand">Take a Number</H1>
-        <p>
-          <this.CourseSuggest
+        <span className="flex-centered-row">
+          <this.CourseSuggest className="search-input"
             itemPredicate={this.courseFilter}
             inputValueRenderer={this.renderCourseAsInputValue}
             itemRenderer={this.renderCourseAsItem}
-            items={[
-              {
-                abbreviation: 'CS3251',
-                description: 'Intermediate Software Design',
-              },
-            ]}
+            items={this.state.courses}
             noResults={this.noResults}
             onItemSelect={this.onCourseSelect}
+            activeItem={null}
           />
-          <Button intent="primary">Create a Course</Button>
-        </p>
+          <Button intent="primary" className="create-course">Create a Course</Button>
+        </span>
       </div>
     );
   }
 
   private onCourseSelect(course: ICourse) {
-    this.props.history.push(`/course/${course.abbreviation}/view`);
+    this.props.history.push(`/course/officeHours/${course.abbreviation}`);
   }
 
   private renderCourseAsInputValue = (course: ICourse) => course.abbreviation;
@@ -82,4 +89,4 @@ class Search extends React.Component<RouteComponentProps<any>, {}> {
   };
 }
 
-export default Search;
+export default CourseSearch;

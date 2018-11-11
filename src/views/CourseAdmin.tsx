@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-class Admin extends React.Component {
+class CourseAdmin extends React.Component {
   public render() {
     return <div />;
   }
 }
 
-export default Admin;
+export default CourseAdmin;

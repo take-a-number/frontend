@@ -4,20 +4,29 @@ import 'normalize.css/normalize.css';
 import * as React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
-import Admin from './course/Admin';
-import Create from './course/Create';
-import Search from './course/Search';
-import View from './course/View';
+import CourseAdmin from './views/CourseAdmin';
+import CourseOfficeHours from './views/CourseOfficeHours';
+import CourseSearch from './views/CourseSearch';
+import CreateCourseForm from './views/CreateCourseForm';
 
 class App extends React.Component {
   public render() {
     return (
       <BrowserRouter>
         <div>
-          <Route path="/" exact={true} component={Search} />
-          <Route path="/course/:courseAbbreviation/create" component={Create} />
-          <Route path="/course/:courseAbbreviation/view" component={View} />
-          <Route path="/course/:courseAbbreviation/admin" component={Admin} />
+          <Route path="/" exact={true} component={CourseSearch} />
+          <Route
+            path="/course/create/:courseAbbreviation"
+            component={CreateCourseForm}
+          />
+          <Route
+            path="/course/officeHours/:courseAbbreviation"
+            component={CourseOfficeHours}
+          />
+          <Route
+            path="/course/admin/:courseAbbreviation"
+            component={CourseAdmin}
+          />
         </div>
       </BrowserRouter>
     );

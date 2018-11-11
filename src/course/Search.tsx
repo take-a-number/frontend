@@ -42,7 +42,7 @@ class Search extends React.Component<RouteComponentProps<any>, {}> {
             noResults={this.noResults}
             onItemSelect={this.onCourseSelect}
           />
-          <Button intent="primary">Create Class</Button>
+          <Button intent="primary">Create a Course</Button>
         </p>
       </div>
     );

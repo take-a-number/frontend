@@ -50,12 +50,19 @@ h1.brand, h1.brand-center {
 .brand-center {
   text-align: center; }
 
-div.teaching-assistant {
-  margin-bottom: 10px;
-  background-color: #106ba3; }
+div.teaching-assistant, div.teaching-assistant-busy, div.teaching-assistant-free {
+  margin-bottom: 10px; }
 
-div.teaching-assistant > * {
-  color: #ffffff; }
+div.teaching-assistant > *, div.teaching-assistant-busy > *, div.teaching-assistant-free > * {
+  color: #ffffff;
+  vertical-align: middle;
+  margin-bottom: 0px; }
+
+div.teaching-assistant-busy {
+  background-color: #d9822b; }
+
+div.teaching-assistant-free {
+  background-color: #0f9960; }
 
 ol.student-queue {
   list-style: none;
@@ -63,7 +70,14 @@ ol.student-queue {
 
 div.student {
   text-align: center;
-  background-color: #ffffff; }
+  background-color: #ffffff;
+  border-radius: 0px; }
 
 div.student#self {
   background-color: #48aff0; }
+
+li:first-child > div.student {
+  border-radius: 3px 3px 0px 0px; }
+
+li:last-child > div.student {
+  border-radius: 0px 0px 3px 3px; }

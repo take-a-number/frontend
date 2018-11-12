@@ -66,11 +66,22 @@ h1.brand {
 
 div.teaching-assistant {
   margin-bottom: 10px;
-  background-color: $blue2;
 }
 
 div.teaching-assistant > * {
   color: $white;
+  vertical-align: middle;
+  margin-bottom: 0px;
+}
+
+div.teaching-assistant-busy {
+  @extend div.teaching-assistant;
+  background-color: $orange3;
+}
+
+div.teaching-assistant-free {
+  @extend div.teaching-assistant;
+  background-color: $green3;
 }
 
 ol.student-queue {
@@ -81,8 +92,17 @@ ol.student-queue {
 div.student {
   text-align: center;
   background-color: $white;
+  border-radius: 0px;
 }
 
 div.student#self {
   background-color: $blue5;
+}
+
+li:first-child > div.student {
+  border-radius: 3px 3px 0px 0px;
+}
+
+li:last-child > div.student {
+  border-radius: 0px 0px 3px 3px;
 }

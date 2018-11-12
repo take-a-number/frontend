@@ -9,7 +9,10 @@ const mockOfficeHours: IOfficeHours = {
     { name: 'Heimer' },
     { name: 'Schmidt' },
   ],
-  teachingAssistants: [{ name: 'Emily' }, { name: 'Joao' }],
+  teachingAssistants: [
+    { name: 'Emily', helping: { name: 'Jack' } },
+    { name: 'Joao' },
+  ],
 };
 
 export { mockOfficeHours };

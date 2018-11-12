@@ -60,8 +60,21 @@ class CourseView extends React.Component<
 
   private renderTeachingAssistantCard(teachingAssistant: ITeachingAssistant) {
     return (
-      <Card className="teaching-assistant">
+      <Card
+        className={
+          teachingAssistant.helping
+            ? 'teaching-assistant-busy'
+            : 'teaching-assistant-free'
+        }
+        elevation={2}
+      >
         <H4>{teachingAssistant.name}</H4>
+        <p className={Classes.UI_TEXT}>
+          Helping{' '}
+          {teachingAssistant.helping
+            ? teachingAssistant.helping.name
+            : 'no one'}
+        </p>
       </Card>
     );
   }
@@ -69,7 +82,9 @@ class CourseView extends React.Component<
   private renderStudentInList(index: number, student: IStudent) {
     return (
       <li key={index}>
-        <Card className="student">{student.name}</Card>
+        <Card className="student" elevation={2}>
+          {student.name}
+        </Card>
       </li>
     );
   }

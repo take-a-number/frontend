@@ -5,6 +5,7 @@ interface IOfficeHours {
   courseAbbreviation: string;
   teachingAssistants: ITeachingAssistant[];
   students: IStudent[];
+  studentJoinCode?: string;
 }
 
 export default IOfficeHours;

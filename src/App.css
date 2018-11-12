@@ -23,16 +23,13 @@ html,
   align-items: center;
   justify-content: center; }
 
-.flex-row-center, .flex-row-space-evenly {
+.flex-row-center {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   width: inherit;
   margin-bottom: 10px; }
-
-.flex-row-space-evenly {
-  justify-content: space-evenly; }
 
 .search-input {
   margin: 10px; }
@@ -51,7 +48,13 @@ h1.brand, h1.brand-center {
   text-align: center; }
 
 div.teaching-assistant, div.teaching-assistant-busy, div.teaching-assistant-free {
-  margin-bottom: 10px; }
+  margin: 10px 10px; }
+
+div.teaching-assistant:first-child, div.teaching-assistant-busy:first-child, div.teaching-assistant-free:first-child {
+  margin-left: 0; }
+
+div.teaching-assistant:last-child, div.teaching-assistant-busy:last-child, div.teaching-assistant-free:last-child {
+  margin-right: 0; }
 
 div.teaching-assistant > *, div.teaching-assistant-busy > *, div.teaching-assistant-free > * {
   color: #ffffff;
@@ -74,7 +77,8 @@ div.student {
   border-radius: 0px; }
 
 div.student#self {
-  background-color: #48aff0; }
+  background-color: #137cbd;
+  color: #ffffff; }
 
 li:first-child > div.student {
   border-radius: 3px 3px 0px 0px; }
@@ -85,4 +89,4 @@ li:last-child > div.student {
 .join-code {
   position: absolute;
   right: 0;
-  bottom: 0; }
+  top: 0; }

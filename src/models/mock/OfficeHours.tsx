@@ -1,18 +1,28 @@
 import IOfficeHours from '../IOfficeHours';
+import { mockIdentity } from './Identity';
 
 const mockOfficeHours: IOfficeHours = {
   courseAbbreviation: 'CS3251',
-  studentJoinCode: 'ABCDEF',
+  self: mockIdentity,
+  studentJoinCode: 'AHD78N',
   students: [
-    { name: 'John' },
-    { name: 'Jacob' },
-    { name: 'Jingle' },
-    { name: 'Heimer' },
-    { name: 'Schmidt' },
+    { id: 'afb09b10-f031-4d79-8ce2-da2e1d9119ff', name: 'John' },
+    { id: '6457da2c-82e8-4df0-869e-183d528b379c', name: 'Jacob' },
+    { id: 'c6d8d334-9ee9-47c9-ac83-f3ee444e4369', name: 'Jingle' },
+    { id: 'a41774bb-0a40-421b-82bb-4353299b170b', name: 'Heimer' },
+    { id: '13dcb12c-55fe-428c-b38a-5142bed5f63f', name: 'Schmidt' },
   ],
   teachingAssistants: [
-    { name: 'Emily', helping: { name: 'Jack' } },
-    { name: 'Joao' },
+    {
+      helping: { id: '77dfb2e0-50ea-48c2-9830-e0b0d86f4809', name: 'Jack' },
+      id: '1409ba6d-647e-4daa-80a3-019a2c8a2cca',
+      name: 'Emily',
+    },
+    { id: '953a4cdf-6995-4ff8-add9-2baf6beba8fc', name: 'Joao' },
+    {
+      id: '054128b8-6d14-4695-85ee-3c76a979adc8',
+      name: 'AReallyLongFirstName',
+    },
   ],
 };
 

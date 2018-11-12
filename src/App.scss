@@ -35,11 +35,6 @@ html,
   margin-bottom: 10px;
 }
 
-.flex-row-space-evenly {
-  @extend .flex-row-center;
-  justify-content: space-evenly;
-}
-
 .search-input {
   margin: 10px;
 }
@@ -65,7 +60,15 @@ h1.brand {
 }
 
 div.teaching-assistant {
-  margin-bottom: 10px;
+  margin: 10px 10px;
+}
+
+div.teaching-assistant:first-child {
+  margin-left: 0;
+}
+
+div.teaching-assistant:last-child {
+  margin-right: 0;
 }
 
 div.teaching-assistant > * {
@@ -96,7 +99,8 @@ div.student {
 }
 
 div.student#self {
-  background-color: $blue5;
+  background-color: $blue3;
+  color: $white;
 }
 
 li:first-child > div.student {
@@ -110,5 +114,5 @@ li:last-child > div.student {
 .join-code {
   position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
 }

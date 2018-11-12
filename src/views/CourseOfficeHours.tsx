@@ -66,7 +66,7 @@ class CourseView extends React.Component<
             intent="danger"
             onClick={this.props.history.goBack}
           >
-            Leave Class
+            Leave Office Hours
           </Button>
           <Button
             icon={isSelfInQueue ? "minus" : "plus"}
@@ -76,7 +76,7 @@ class CourseView extends React.Component<
               isSelfInQueue ? this.removeSelfFromQueue : this.addSelfToQueue
             }
           >
-            {isSelfInQueue ? 'Leave Line' : 'Get in Line'}
+            {isSelfInQueue ? 'Leave Queue' : 'Join Queue'}
           </Button>
         </ButtonGroup>
         <ol className={applySkele('student-queue')}>

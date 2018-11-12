@@ -106,3 +106,9 @@ li:first-child > div.student {
 li:last-child > div.student {
   border-radius: 0px 0px 3px 3px;
 }
+
+.join-code {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}

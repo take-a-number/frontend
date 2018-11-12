@@ -54,6 +54,11 @@ class CourseView extends React.Component<
         <Button className={skele()} large={true} intent="success">
           Get in Line
         </Button>
+        <Card className="join-code">
+          {this.state.officeHours &&
+            this.state.officeHours.studentJoinCode &&
+            `Join Code: ${this.state.officeHours.studentJoinCode}`}
+        </Card>
       </div>
     );
   }

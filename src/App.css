@@ -6,12 +6,8 @@ html,
 #root {
   min-width: 100vw;
   min-height: 100vh;
-  background-color: #ebf1f5; }
-
-h1,
-h2,
-h3 {
-  font-family: 'Rubik', sans-serif; }
+  background-color: #ebf1f5;
+  font-family: 'Fira Sans', sans-serif; }
 
 .app, .app-center {
   display: flex;

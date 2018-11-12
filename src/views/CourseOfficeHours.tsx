@@ -68,7 +68,7 @@ class CourseView extends React.Component<
 
   private renderStudentInList(index: number, student: IStudent) {
     return (
-      <li>
+      <li key={index}>
         <Card className="student">{student.name}</Card>
       </li>
     );

@@ -69,7 +69,7 @@ class CourseView extends React.Component<
             Leave Office Hours
           </Button>
           <Button
-            icon={isSelfInQueue ? "minus" : "plus"}
+            icon={isSelfInQueue ? 'minus' : 'plus'}
             className={applySkele()}
             intent={isSelfInQueue ? 'warning' : 'success'}
             onClick={
@@ -85,11 +85,11 @@ class CourseView extends React.Component<
             : mockOfficeHours.students
           ).map(student => this.renderStudentInList(it++, student))}
         </ol>
-        <Card className="join-code">
-          {this.state.officeHours &&
-            this.state.officeHours.studentJoinCode &&
-            `Join Code: ${this.state.officeHours.studentJoinCode}`}
-        </Card>
+        {this.state.officeHours && this.state.officeHours.studentJoinCode && (
+          <Card className="join-code">
+            Join Code: {this.state.officeHours.studentJoinCode}
+          </Card>
+        )}
       </div>
     );
   }

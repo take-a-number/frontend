@@ -16,7 +16,7 @@ class App extends React.Component {
         <div>
           <Route path="/" exact={true} component={CourseSearch} />
           <Route
-            path="/course/create/:courseAbbreviation"
+            path="/course/create/"
             component={CreateCourseForm}
           />
           <Route

@@ -49,7 +49,7 @@ class CourseSearch extends React.Component<
             onItemSelect={this.onCourseSelect}
             activeItem={null}
           />
-          <Button intent="primary" className="create-course">Create a Course</Button>
+          <Button intent="primary" className="create-course" onClick={this.onCreateCourseClick}>Create a Course</Button>
         </span>
       </div>
     );
@@ -57,6 +57,10 @@ class CourseSearch extends React.Component<
 
   private onCourseSelect(course: ICourse) {
     this.props.history.push(`/course/officeHours/${course.abbreviation}`);
+  }
+
+  private onCreateCourseClick() {
+    this.props.history.push(`/course/create/`);
   }
 
   private renderCourseAsInputValue = (course: ICourse) => course.abbreviation;

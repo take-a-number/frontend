@@ -37,9 +37,9 @@ class CourseSearch extends React.Component<
 
   public render() {
     return (
-      <div className="App">
-        <H1 className="brand">Take a Number</H1>
-        <span className="flex-centered-row">
+      <div className="app-center">
+        <H1 className="brand-center">Take a Number</H1>
+        <span className="flex-row-center">
           <this.CourseSuggest className="search-input"
             itemPredicate={this.courseFilter}
             inputValueRenderer={this.renderCourseAsInputValue}

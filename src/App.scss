@@ -1,25 +1,47 @@
+@import '../node_modules/@blueprintjs/core/lib/scss/variables.scss';
+
 body,
 html,
-#root,
-.App {
+#root {
   min-width: 100vw;
   min-height: 100vh;
+  background-color: $light-gray4;
 }
 
-.App {
+h1,
+h2,
+h3 {
+  font-family: 'Rubik', sans-serif;
+}
+
+.app {
   display: flex;
   flex-flow: column wrap;
-  background-color: whitesmoke;
-  align-items: center;
-  justify-content: center;
+  padding-top: 4rem;
   padding-left: 1.25%;
   padding-right: 1.25%;
+  width: 97.5%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.flex-centered-row {
+.app-center {
+  @extend .app;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-row-center {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  justify-content: center;
+  width: inherit;
+  margin-bottom: 10px;
+}
+
+.flex-row-space-evenly {
+  @extend .flex-row-center;
   justify-content: space-evenly;
 }
 
@@ -30,14 +52,42 @@ html,
 .create-course {
 }
 
-h1.brand {
-  font-family: 'Londrina Solid', cursive;
-  font-weight: 400;
-  font-size: 3.75rem;
+.brand {
   margin-bottom: 10px;
-  text-align: center;
   /* Prevent the brand text from making the page scale horizontally */
   overflow-wrap: break-word;
   max-width: 100%;
-  hyphens: auto;
+}
+
+h1.brand {
+  font-size: 4em;
+  line-height: 1em;
+}
+
+.brand-center {
+  @extend .brand;
+  text-align: center;
+}
+
+div.teaching-assistant {
+  margin-bottom: 10px;
+  background-color: $blue2;
+}
+
+div.teaching-assistant > * {
+  color: $white;
+}
+
+ol.student-queue {
+  list-style: none;
+  padding-left: 0px;
+}
+
+div.student {
+  text-align: center;
+  background-color: $white;
+}
+
+div.student#self {
+  background-color: $blue5;
 }

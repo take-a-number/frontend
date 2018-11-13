@@ -40,6 +40,12 @@ span.bp3-popover-target {
   width: 100%;
 }
 
+/* Make button groups wrap if they don't fit on the screen */
+div.bp3-button-group {
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
 .search-input {
   margin: 10px;
 }

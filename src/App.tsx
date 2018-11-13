@@ -13,7 +13,7 @@ class App extends React.Component {
   public render() {
     return (
       <BrowserRouter>
-        <div>
+        <React.Fragment>
           <Route path="/" exact={true} component={CourseSearch} />
           <Route
             path="/course/create/"
@@ -27,7 +27,7 @@ class App extends React.Component {
             path="/course/admin/:courseId"
             component={CourseAdmin}
           />
-        </div>
+        </React.Fragment>
       </BrowserRouter>
     );
   }

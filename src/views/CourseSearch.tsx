@@ -21,12 +21,13 @@ class CourseSearch extends React.Component<
   private CourseSuggest = Suggest.ofType<ICourse>();
   private noResults = <MenuItem disabled={true} text="No courses found..." />;
 
-  constructor(props: RouteComponentProps<any>) {
+  public constructor(props: RouteComponentProps<any>) {
     super(props);
     this.state = {
       courses: [],
     };
     this.onCourseSelect = this.onCourseSelect.bind(this);
+    this.onCreateCourseClick = this.onCreateCourseClick.bind(this);
   }
 
   public componentDidMount() {
@@ -40,7 +41,8 @@ class CourseSearch extends React.Component<
       <div className="app-center">
         <H1 className="brand-center">Take a Number</H1>
         <span className="flex-row-center">
-          <this.CourseSuggest className="search-input"
+          <this.CourseSuggest
+            className="search-input"
             itemPredicate={this.courseFilter}
             inputValueRenderer={this.renderCourseAsInputValue}
             itemRenderer={this.renderCourseAsItem}
@@ -49,14 +51,21 @@ class CourseSearch extends React.Component<
             onItemSelect={this.onCourseSelect}
             activeItem={null}
           />
-          <Button intent="primary" className="create-course" onClick={this.onCreateCourseClick}>Create a Course</Button>
+          <Button
+            intent="primary"
+            className="new-course"
+            onClick={this.onCreateCourseClick}
+            icon="folder-new"
+          >
+            New Course
+          </Button>
         </span>
       </div>
     );
   }
 
   private onCourseSelect(course: ICourse) {
-    this.props.history.push(`/course/officeHours/${course.abbreviation}`);
+    this.props.history.push(`/course/officeHours/${course.id}`);
   }
 
   private onCreateCourseClick() {
@@ -79,7 +88,7 @@ class CourseSearch extends React.Component<
         disabled={renderer.modifiers.disabled}
         onClick={renderer.handleClick}
         text={highlightText(courseText, renderer.query)}
-        key={course.abbreviation}
+        key={course.id}
       />
     );
   };

@@ -69,7 +69,7 @@ class CourseView extends React.Component<
             Leave Office Hours
           </Button>
           <Button
-            icon={isSelfInQueue ? 'minus' : 'plus'}
+            icon={isSelfInQueue ? 'graph-remove' : 'new-object'}
             className={applySkele()}
             intent={isSelfInQueue ? 'warning' : 'success'}
             onClick={

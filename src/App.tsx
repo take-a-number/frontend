@@ -20,11 +20,11 @@ class App extends React.Component {
             component={CreateCourseForm}
           />
           <Route
-            path="/course/officeHours/:courseAbbreviation"
+            path="/course/officeHours/:courseId"
             component={CourseOfficeHours}
           />
           <Route
-            path="/course/admin/:courseAbbreviation"
+            path="/course/admin/:courseId"
             component={CourseAdmin}
           />
         </div>

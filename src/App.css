@@ -31,6 +31,10 @@ html,
   width: inherit;
   margin-bottom: 10px; }
 
+/* Make Select the same size as the rest of the inputs on a form */
+span.bp3-popover-target {
+  width: 100%; }
+
 .search-input {
   margin: 10px; }
 

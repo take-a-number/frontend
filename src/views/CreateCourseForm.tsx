@@ -15,6 +15,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { mockSchools } from 'src/models/mock/school';
 import {ISchool} from 'src/models/school';
+import { formDataToJSON } from 'src/util/form';
 import { highlightText } from 'src/util/Select';
 
 interface ICreateCourseFormState {
@@ -121,7 +122,7 @@ class CreateCourseForm extends React.Component<
   private onCreateCourseFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    this.formDataToJSON(formData);
+    formDataToJSON(formData);
     // TODO: send to backend
   }
 
@@ -131,25 +132,6 @@ class CreateCourseForm extends React.Component<
   ) => {
     return school.name.toLowerCase().indexOf(query.toLowerCase()) >= 0;
   };
-
-  // Adapted from https://stackoverflow.com/a/49826736
-  private formDataToJSON(formData: FormData): string {
-    const json = {};
-    formData.forEach((value, key) => {
-      // Check if property already exists
-      if (Object.prototype.hasOwnProperty.call(json, key)) {
-        let current = json[key];
-        if (!Array.isArray(current)) {
-          // If it's not an array, convert it to an array.
-          current = json[key] = [current];
-        }
-        current.push(value); // Add the new value to the array.
-      } else {
-        json[key] = value;
-      }
-    });
-    return JSON.stringify(json);
-  }
 }
 
 export default CreateCourseForm;

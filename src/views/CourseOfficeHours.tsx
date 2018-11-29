@@ -3,16 +3,24 @@ import {
   ButtonGroup,
   Card,
   Classes,
+  FormGroup,
   H1,
   H2,
   H4,
+  InputGroup,
+  Popover,
+  PopoverInteractionKind,
+  Position,
+  Toaster,
 } from '@blueprintjs/core';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { mockOfficeHours } from 'src/models/mock/officeHours';
 import { IStudent } from 'src/models/user/student';
 import { ITeachingAssistant } from 'src/models/user/teachingAssistant';
-import { fetchIdentity, IUser } from 'src/models/user/user';
+import { EUserType, fetchIdentity, IUser } from 'src/models/user/user';
+import fetchit from 'src/util/fetchit';
+import { formDataToJSON } from 'src/util/form';
 import { IOfficeHours } from '../models/officeHours';
 
 interface ICourseOfficeHoursState {
@@ -24,6 +32,11 @@ class CourseView extends React.Component<
   RouteComponentProps<any>,
   ICourseOfficeHoursState
 > {
+  private toaster: Toaster;
+  private refHandlers = {
+    toaster: (ref: Toaster) => (this.toaster = ref),
+  };
+
   constructor(props: RouteComponentProps<any>) {
     super(props);
     this.state = {};
@@ -34,6 +47,7 @@ class CourseView extends React.Component<
 
   public componentDidMount() {
     fetchIdentity(identity => this.setState({ identity }));
+    setTimeout(() => this.setState({ officeHours: mockOfficeHours }));
   }
 
   public render() {
@@ -67,19 +81,57 @@ class CourseView extends React.Component<
             className={applySkele()}
             intent="danger"
             onClick={this.props.history.goBack}
-          >
-            Leave Office Hours
-          </Button>
-          <Button
-            icon={isSelfInQueue ? 'graph-remove' : 'new-object'}
-            className={applySkele()}
-            intent={isSelfInQueue ? 'warning' : 'success'}
-            onClick={
-              isSelfInQueue ? this.removeSelfFromQueue : this.addSelfToQueue
-            }
-          >
-            {isSelfInQueue ? 'Leave Queue' : 'Join Queue'}
-          </Button>
+            text="Leave Office Hours"
+          />
+          {this.state.identity &&
+            this.state.officeHours &&
+            this.state.identity.type === EUserType.Student && (
+              <Button
+                icon={isSelfInQueue ? 'graph-remove' : 'new-object'}
+                className={applySkele()}
+                intent={isSelfInQueue ? 'warning' : 'success'}
+                onClick={
+                  isSelfInQueue ? this.removeSelfFromQueue : this.addSelfToQueue
+                }
+                text={isSelfInQueue ? 'Leave Queue' : 'Join Queue'}
+              />
+            )}
+          {this.state.identity &&
+            this.state.officeHours &&
+            this.state.identity.type === EUserType.TeachingAssistant && (
+              <Button
+                icon="sort"
+                className={applySkele()}
+                intent="primary"
+                onClick={this.pollQueue(this.state.officeHours.students[0])}
+                disabled={this.state.officeHours.students.length === 0}
+                text="Next Student"
+              />
+            )}
+          {!this.state.identity && (
+            <Popover
+              interactionKind={PopoverInteractionKind.CLICK}
+              popoverClassName="bp3-popover-content-sizing"
+              position={Position.RIGHT}
+            >
+              <Button
+                icon="key"
+                className={applySkele()}
+                intent="primary"
+                text="Enter Join Code"
+                disabled={!this.state.officeHours}
+              />
+              <div>
+                <form onSubmit={this.handleJoinCodeSubmit}>
+                  <FormGroup>
+                    <InputGroup placeholder="e.g. ABC123" />
+                  </FormGroup>
+                  <Button text="Join" intent="primary" />
+                  {this.props.children}
+                </form>
+              </div>
+            </Popover>
+          )}
         </ButtonGroup>
         <ol className={applySkele('student-queue')}>
           {(this.state.officeHours
@@ -92,6 +144,9 @@ class CourseView extends React.Component<
             Join Code: {this.state.officeHours.studentJoinCode}
           </Card>
         )}
+        <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster}>
+          {}
+        </Toaster>
       </div>
     );
   }
@@ -176,6 +231,41 @@ class CourseView extends React.Component<
       );
     }
     return false;
+  }
+
+  private pollQueue(student: IStudent) {
+    // TODO: Hook this up.
+    return () => {
+      if (!this.state.officeHours) {
+        return;
+      }
+      fetchit(
+        `/course/${this.state.officeHours.courseAbbreviation}`,
+        'POST',
+        {},
+        (officeHours: IOfficeHours) => this.setState({ officeHours }),
+      );
+    };
+  }
+
+  private handleJoinCodeSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!this.state.officeHours) {
+      return;
+    }
+    const formData = new FormData(event.currentTarget);
+    fetchit(
+      `/course/${this.state.officeHours.courseAbbreviation}/`,
+      'PUT',
+      formDataToJSON(formData),
+      (identity: IUser) => this.setState({ identity }),
+      (_: any) =>
+        this.toaster.show({
+          icon: 'error',
+          intent: 'danger',
+          message: 'The join code you entered was incorrect. Please try again.',
+        }),
+    );
   }
 }
 

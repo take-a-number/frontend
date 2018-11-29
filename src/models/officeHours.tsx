@@ -13,6 +13,6 @@ interface IOfficeHours {
 const fetchOfficeHours = (
   courseAbbreviation: string,
   onSuccess: (officeHours: IOfficeHours) => void,
-) => fetchit(`/course/${courseAbbreviation}`, 'GET', onSuccess);
+) => fetchit(`/course/${courseAbbreviation}`, 'GET', undefined, onSuccess);
 
 export { IOfficeHours, fetchOfficeHours };

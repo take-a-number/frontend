@@ -6,6 +6,7 @@ import {
   FormGroup,
   H1,
   H2,
+  H3,
   H4,
   InputGroup,
   Popover,
@@ -21,7 +22,7 @@ import { ITeachingAssistant } from 'src/models/user/teachingAssistant';
 import { EUserType, fetchIdentity, IUser } from 'src/models/user/user';
 import fetchit from 'src/util/fetchit';
 import { formDataToJSON } from 'src/util/form';
-import { IOfficeHours } from '../models/officeHours';
+import { fetchOfficeHours, IOfficeHours } from '../models/officeHours';
 
 interface ICourseOfficeHoursState {
   officeHours?: IOfficeHours;
@@ -43,17 +44,29 @@ class CourseView extends React.Component<
     this.addSelfToQueue = this.addSelfToQueue.bind(this);
     this.removeSelfFromQueue = this.removeSelfFromQueue.bind(this);
     this.isSelfInQueue = this.isSelfInQueue.bind(this);
+    this.pollQueue = this.pollQueue.bind(this);
+    this.handleJoinCodeSubmit = this.handleJoinCodeSubmit.bind(this);
+    this.isSelfInTeachingAssistants = this.isSelfInTeachingAssistants.bind(
+      this,
+    );
+    this.beginOfficeHours = this.beginOfficeHours.bind(this);
+    this.endOfficeHours = this.endOfficeHours.bind(this);
   }
 
   public componentDidMount() {
-    fetchIdentity(identity => this.setState({ identity }));
-    setTimeout(() => this.setState({ officeHours: mockOfficeHours }));
+    fetchIdentity(this.props.match.params.courseId, identity =>
+      this.setState({ identity }),
+    );
+    fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+      this.setState({ officeHours }),
+    );
   }
 
   public render() {
     let it = 0;
     const applySkele = this.applySkeletonStyleIfDefined(this.state.officeHours);
     const isSelfInQueue = this.isSelfInQueue();
+    const isSelfInTeachingAssistants = this.isSelfInTeachingAssistants();
     return (
       <div className="app-center">
         <H1 className={applySkele('brand-center')}>
@@ -73,6 +86,10 @@ class CourseView extends React.Component<
             : mockOfficeHours.teachingAssistants.map(
                 this.renderTeachingAssistantCard,
               )}
+          {this.state.officeHours &&
+            this.state.officeHours.teachingAssistants.length === 0 && (
+              <H3>There are no teaching assistants at this time.</H3>
+            )}
         </div>
         <H2 className={applySkele('brand-center')}>Student Queue</H2>
         <ButtonGroup large={true}>
@@ -100,10 +117,32 @@ class CourseView extends React.Component<
             this.state.officeHours &&
             this.state.identity.type === EUserType.TeachingAssistant && (
               <Button
-                icon="sort"
+                icon={
+                  isSelfInTeachingAssistants ? 'graph-remove' : 'new-object'
+                }
+                className={applySkele()}
+                intent={isSelfInTeachingAssistants ? 'warning' : 'success'}
+                onClick={
+                  isSelfInTeachingAssistants
+                    ? this.endOfficeHours
+                    : this.beginOfficeHours
+                }
+                text={
+                  isSelfInTeachingAssistants
+                    ? 'End Your Office Hours'
+                    : 'Begin Your Office Hours'
+                }
+              />
+            )}
+          {this.state.identity &&
+            this.state.officeHours &&
+            this.state.identity.type === EUserType.TeachingAssistant &&
+            isSelfInTeachingAssistants && (
+              <Button
+                icon="arrow-up"
                 className={applySkele()}
                 intent="primary"
-                onClick={this.pollQueue(this.state.officeHours.students[0])}
+                onClick={this.pollQueue}
                 disabled={this.state.officeHours.students.length === 0}
                 text="Next Student"
               />
@@ -123,21 +162,28 @@ class CourseView extends React.Component<
               />
               <div>
                 <form onSubmit={this.handleJoinCodeSubmit}>
-                  <FormGroup>
-                    <InputGroup placeholder="e.g. ABC123" />
+                  <FormGroup label="Name">
+                    <InputGroup name="name" placeholder="e.g. Johnny Test" />
                   </FormGroup>
-                  <Button text="Join" intent="primary" />
+                  <FormGroup label="Join Code">
+                    <InputGroup name="joinCode" placeholder="e.g. ABC123" />
+                  </FormGroup>
+                  <Button text="Join" intent="primary" type="submit" />
                   {this.props.children}
                 </form>
               </div>
             </Popover>
           )}
         </ButtonGroup>
+        {this.state.officeHours &&
+          this.state.officeHours.students.length === 0 && (
+            <H3>There are no students in the queue at this time.</H3>
+          )}
         <ol className={applySkele('student-queue')}>
           {(this.state.officeHours
             ? this.state.officeHours.students
             : mockOfficeHours.students
-          ).map((student: IStudent) => this.renderStudentInList(it++, student))}
+          ).map(student => this.renderStudentInList(it++, student))}
         </ol>
         {this.state.officeHours && this.state.officeHours.studentJoinCode && (
           <Card className="join-code">
@@ -200,31 +246,38 @@ class CourseView extends React.Component<
     if (!this.state.identity || !this.state.officeHours) {
       return;
     }
-    const identity = this.state.identity;
-    const officeHours = this.state.officeHours;
-    officeHours.students.push(identity);
-    this.setState({
-      officeHours,
-    });
+    fetchit(
+      `/${this.props.match.params.courseId}/office_hours/students`,
+      'PUT',
+      undefined,
+    ).then(() =>
+      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+        this.setState({ officeHours }),
+      ),
+    );
   }
 
   private removeSelfFromQueue() {
     if (!this.state.identity || !this.state.officeHours) {
       return;
     }
-    const officeHours = this.state.officeHours;
-    const self = this.state.identity;
-    const selfIndex = officeHours.students.findIndex(
-      student => self.id === student.id,
+    fetchit(
+      `/${this.props.match.params.courseId}/office_hours/students`,
+      'DELETE',
+      undefined,
+    ).then(() =>
+      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+        this.setState({ officeHours }),
+      ),
     );
-    officeHours.students.splice(selfIndex, 1);
-    this.setState({
-      officeHours,
-    });
   }
 
   private isSelfInQueue(): boolean {
-    if (!!this.state.identity && !!this.state.officeHours) {
+    if (
+      !!this.state.identity &&
+      !!this.state.officeHours &&
+      this.state.identity.type === EUserType.Student
+    ) {
       const self = this.state.identity;
       return this.state.officeHours.students.some(
         student => self.id === student.id,
@@ -233,19 +286,36 @@ class CourseView extends React.Component<
     return false;
   }
 
-  private pollQueue(student: IStudent) {
-    // TODO: Hook this up.
-    return () => {
-      if (!this.state.officeHours) {
-        return;
-      }
-      fetchit(
-        `/course/${this.state.officeHours.courseAbbreviation}`,
-        'POST',
-        {},
-        (officeHours: IOfficeHours) => this.setState({ officeHours }),
+  private pollQueue() {
+    if (
+      !this.state.officeHours ||
+      this.state.officeHours.students.length === 0
+    ) {
+      return;
+    }
+    fetchit(
+      `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
+      'POST',
+      this.state.officeHours.students[0],
+    ).then(() =>
+      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+        this.setState({ officeHours }),
+      ),
+    );
+  }
+
+  private isSelfInTeachingAssistants(): boolean {
+    if (
+      !!this.state.identity &&
+      !!this.state.officeHours &&
+      this.state.identity.type === EUserType.TeachingAssistant
+    ) {
+      const identity = this.state.identity;
+      return this.state.officeHours.teachingAssistants.some(
+        ta => identity.id === ta.id,
       );
-    };
+    }
+    return false;
   }
 
   private handleJoinCodeSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -255,7 +325,7 @@ class CourseView extends React.Component<
     }
     const formData = new FormData(event.currentTarget);
     fetchit(
-      `/course/${this.state.officeHours.courseAbbreviation}/`,
+      `/${this.props.match.params.courseId}/office_hours`,
       'PUT',
       formDataToJSON(formData),
       (identity: IUser) => this.setState({ identity }),
@@ -265,6 +335,46 @@ class CourseView extends React.Component<
           intent: 'danger',
           message: 'The join code you entered was incorrect. Please try again.',
         }),
+    )
+      .then(() =>
+        fetchIdentity(this.props.match.params.courseId, identity =>
+          this.setState({ identity }),
+        ),
+      )
+      .then(() =>
+        fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+          this.setState({ officeHours }),
+        ),
+      );
+  }
+
+  private beginOfficeHours() {
+    if (!this.state.identity || !this.state.officeHours) {
+      return;
+    }
+    fetchit(
+      `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
+      'PUT',
+      undefined,
+    ).then(() =>
+      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+        this.setState({ officeHours }),
+      ),
+    );
+  }
+
+  private endOfficeHours() {
+    if (!this.state.identity || !this.state.officeHours) {
+      return;
+    }
+    fetchit(
+      `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
+      'DELETE',
+      undefined,
+    ).then(() =>
+      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+        this.setState({ officeHours }),
+      ),
     );
   }
 }

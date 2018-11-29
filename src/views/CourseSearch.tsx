@@ -6,7 +6,7 @@ import {
 } from '@blueprintjs/select';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { mockCourses } from 'src/models/mock/course';
+import fetchit from 'src/util/fetchit';
 import { highlightText } from 'src/util/Select';
 import { ICourse } from '../models/course';
 
@@ -31,9 +31,9 @@ class CourseSearch extends React.Component<
   }
 
   public componentDidMount() {
-    this.setState({
-      courses: mockCourses,
-    });
+    fetchit('/', 'GET', undefined, (courses: ICourse[]) =>
+      this.setState({ courses }),
+    );
   }
 
   public render() {

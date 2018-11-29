@@ -4,15 +4,14 @@ import { ITeachingAssistant } from './user/teachingAssistant';
 
 interface IOfficeHours {
   courseAbbreviation: string;
-  instructorJoinCode?: string;
+  studentJoinCode?: string;
   teachingAssistants: ITeachingAssistant[];
   students: IStudent[];
-  studentJoinCode?: string;
 }
 
 const fetchOfficeHours = (
-  courseAbbreviation: string,
+  courseId: string,
   onSuccess: (officeHours: IOfficeHours) => void,
-) => fetchit(`/course/${courseAbbreviation}`, 'GET', undefined, onSuccess);
+) => fetchit(`/${courseId}/office_hours`, 'GET', undefined, onSuccess);
 
 export { IOfficeHours, fetchOfficeHours };

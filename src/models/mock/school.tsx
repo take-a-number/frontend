@@ -1,4 +1,4 @@
-import ISchool from '../ISchool';
+import { ISchool } from '../school';
 
 const mockSchools: ISchool[] = [
   {

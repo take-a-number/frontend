@@ -1,9 +1,8 @@
-import IOfficeHours from '../IOfficeHours';
-import { mockIdentity } from './Identity';
+import { IOfficeHours } from '../officeHours';
 
 const mockOfficeHours: IOfficeHours = {
   courseAbbreviation: 'CS3251',
-  self: mockIdentity,
+  instructorJoinCode: 'B7S48H',
   studentJoinCode: 'AHD78N',
   students: [
     { id: 'afb09b10-f031-4d79-8ce2-da2e1d9119ff', name: 'John' },
@@ -14,7 +13,6 @@ const mockOfficeHours: IOfficeHours = {
   ],
   teachingAssistants: [
     {
-      helping: { id: '77dfb2e0-50ea-48c2-9830-e0b0d86f4809', name: 'Jack' },
       id: '1409ba6d-647e-4daa-80a3-019a2c8a2cca',
       name: 'Emily',
     },

@@ -6,9 +6,9 @@ import {
 } from '@blueprintjs/select';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { mockCourses } from 'src/models/mock/Course';
+import { mockCourses } from 'src/models/mock/course';
 import { highlightText } from 'src/util/Select';
-import ICourse from '../models/ICourse';
+import {ICourse} from '../models/course';
 
 interface ICourseSearchState {
   courses: ICourse[];

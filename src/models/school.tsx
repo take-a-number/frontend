@@ -3,4 +3,4 @@ interface ISchool {
   id: string;
 }
 
-export default ISchool;
+export { ISchool };

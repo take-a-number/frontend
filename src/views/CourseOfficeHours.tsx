@@ -9,13 +9,15 @@ import {
 } from '@blueprintjs/core';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { mockOfficeHours } from 'src/models/mock/OfficeHours';
-import IStudent from 'src/models/user/IStudent';
-import ITeachingAssistant from 'src/models/user/ITeachingAssistant';
-import IOfficeHours from '../models/IOfficeHours';
+import { mockOfficeHours } from 'src/models/mock/officeHours';
+import { IStudent } from 'src/models/user/student';
+import { ITeachingAssistant } from 'src/models/user/teachingAssistant';
+import { fetchIdentity, IUser } from 'src/models/user/user';
+import { IOfficeHours } from '../models/officeHours';
 
 interface ICourseOfficeHoursState {
   officeHours?: IOfficeHours;
+  identity?: IUser;
 }
 
 class CourseView extends React.Component<
@@ -31,7 +33,7 @@ class CourseView extends React.Component<
   }
 
   public componentDidMount() {
-    setTimeout(() => this.setState({ officeHours: mockOfficeHours }), 1000);
+    fetchIdentity(identity => this.setState({ identity }));
   }
 
   public render() {
@@ -83,7 +85,7 @@ class CourseView extends React.Component<
           {(this.state.officeHours
             ? this.state.officeHours.students
             : mockOfficeHours.students
-          ).map(student => this.renderStudentInList(it++, student))}
+          ).map((student: IStudent) => this.renderStudentInList(it++, student))}
         </ol>
         {this.state.officeHours && this.state.officeHours.studentJoinCode && (
           <Card className="join-code">
@@ -120,8 +122,7 @@ class CourseView extends React.Component<
         <Card
           className="student"
           id={
-            this.state.officeHours &&
-            this.state.officeHours.self.id === student.id
+            this.state.identity && this.state.identity.id === student.id
               ? 'self'
               : undefined
           }
@@ -141,22 +142,23 @@ class CourseView extends React.Component<
   }
 
   private addSelfToQueue() {
-    if (!this.state.officeHours) {
+    if (!this.state.identity || !this.state.officeHours) {
       return;
     }
+    const identity = this.state.identity;
     const officeHours = this.state.officeHours;
-    officeHours.students.push(officeHours.self);
+    officeHours.students.push(identity);
     this.setState({
       officeHours,
     });
   }
 
   private removeSelfFromQueue() {
-    if (!this.state.officeHours) {
+    if (!this.state.identity || !this.state.officeHours) {
       return;
     }
     const officeHours = this.state.officeHours;
-    const self = this.state.officeHours.self;
+    const self = this.state.identity;
     const selfIndex = officeHours.students.findIndex(
       student => self.id === student.id,
     );
@@ -167,8 +169,8 @@ class CourseView extends React.Component<
   }
 
   private isSelfInQueue(): boolean {
-    if (!!this.state.officeHours) {
-      const self = this.state.officeHours.self;
+    if (!!this.state.identity && !!this.state.officeHours) {
+      const self = this.state.identity;
       return this.state.officeHours.students.some(
         student => self.id === student.id,
       );

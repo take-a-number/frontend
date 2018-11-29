@@ -13,8 +13,8 @@ import {
 } from '@blueprintjs/select';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import ISchool from 'src/models/ISchool';
-import { mockSchools } from 'src/models/mock/School';
+import { mockSchools } from 'src/models/mock/school';
+import {ISchool} from 'src/models/school';
 import { highlightText } from 'src/util/Select';
 
 interface ICreateCourseFormState {

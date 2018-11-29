@@ -4,4 +4,4 @@ interface ICourse {
   id: string;
 }
 
-export default ICourse;
+export { ICourse };

@@ -1,6 +1,6 @@
-import IUser from './IUser';
+import { IUser } from './user';
 
 // tslint:disable-next-line:no-empty-interface
 interface IStudent extends IUser {}
 
-export default IStudent;
+export { IStudent };

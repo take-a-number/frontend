@@ -1,4 +1,4 @@
-import ICourse from '../ICourse';
+import { ICourse } from '../course';
 
 const mockCourses: ICourse[] = [
   {

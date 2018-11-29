@@ -1,0 +1,3 @@
+const API_ENDPOINT = 'SOME_IP_ADDRESS';
+
+export { API_ENDPOINT };

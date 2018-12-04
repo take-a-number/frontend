@@ -1,7 +1,8 @@
 # Frontend - Take a Number
-React-Typescript frontend for take a number.
+React-Typescript Progressive Web App for take a number.
 
-To build, run `yarn build`.
+- To install needed packages, run `yarn install`.
 
-For development, run `yarn run` to start the development server.
+- To build, run `yarn build`.
 
+- For development, run `yarn run` to start the development server. Change the endpoint from the herokuapp one to your local api development server if needed.

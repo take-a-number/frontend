@@ -1,3 +1,3 @@
-const API_ENDPOINT = 'http://localhost:5000';
+const API_ENDPOINT = 'https://takeanumber-api.herokuapp.com';
 
 export { API_ENDPOINT };

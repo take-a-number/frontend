@@ -57,9 +57,11 @@ class CourseView extends React.Component<
     fetchIdentity(this.props.match.params.courseId, identity =>
       this.setState({ identity }),
     );
-    fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-      this.setState({ officeHours }),
-    );
+    setInterval(() => {
+      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
+        this.setState({ officeHours }),
+      );
+    }, 500);
   }
 
   public render() {

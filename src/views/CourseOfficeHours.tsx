@@ -221,9 +221,9 @@ class CourseView extends React.Component<
 
   private renderStudentInList(index: number, student: IStudent) {
     let displayName = "Student"
-    if (this.state.identity && this.state.identity.type === EUserType.TeachingAssistant) {
+    if ((this.state.identity && this.state.identity.type === EUserType.TeachingAssistant) || this.state.identity.id === student.id) {
         displayName = student.name
-    } 
+    }
     return (
       <li key={index}>
         <Card

@@ -220,6 +220,10 @@ class CourseView extends React.Component<
   }
 
   private renderStudentInList(index: number, student: IStudent) {
+    let displayName = "Student"
+    if (this.state.identity && this.state.identity.type === EUserType.TeachingAssistant) {
+        displayName = student.name
+    } 
     return (
       <li key={index}>
         <Card
@@ -231,7 +235,7 @@ class CourseView extends React.Component<
           }
           elevation={2}
         >
-          {student.name}
+            {displayName}
         </Card>
       </li>
     );

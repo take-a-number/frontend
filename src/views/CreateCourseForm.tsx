@@ -5,6 +5,8 @@ import {
   H1,
   InputGroup,
   MenuItem,
+  Position,
+  Toaster,
 } from '@blueprintjs/core';
 import {
   IItemRendererProps,
@@ -14,7 +16,8 @@ import {
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { mockSchools } from 'src/models/mock/school';
-import {ISchool} from 'src/models/school';
+import { ISchool } from 'src/models/school';
+import fetchit from 'src/util/fetchit';
 import { formDataToJSON } from 'src/util/form';
 import { highlightText } from 'src/util/Select';
 
@@ -27,6 +30,10 @@ class CreateCourseForm extends React.Component<
   RouteComponentProps<any>,
   ICreateCourseFormState
 > {
+  private toaster: Toaster;
+  private refHandlers = {
+    toaster: (ref: Toaster) => (this.toaster = ref),
+  };
   private SchoolSuggest = Suggest.ofType<ISchool>();
   private noResults = <MenuItem disabled={true} text="No schools found..." />;
 
@@ -39,6 +46,7 @@ class CreateCourseForm extends React.Component<
   public componentDidMount() {
     this.setState({
       schools: mockSchools,
+      selectedSchool: mockSchools.length > 0 ? mockSchools[0] : undefined,
     });
   }
 
@@ -49,6 +57,7 @@ class CreateCourseForm extends React.Component<
         <form onSubmit={this.onCreateCourseFormSubmit}>
           <FormGroup label="School">
             <this.SchoolSuggest
+              selectedItem={this.state.selectedSchool}
               inputValueRenderer={this.renderSchoolAsInputValue}
               itemPredicate={this.schoolFilter}
               items={this.state.schools}
@@ -60,16 +69,22 @@ class CreateCourseForm extends React.Component<
           <FormGroup label="Course Name">
             <InputGroup
               placeholder="e.g. Intermediate Software Design"
+              name="description"
               required={true}
             />
           </FormGroup>
           <FormGroup label="Course Abbreviation">
-            <InputGroup placeholder="e.g. CS 3251" required={true} />
+            <InputGroup
+              placeholder="e.g. CS 3251"
+              required={true}
+              name="abbreviation"
+            />
           </FormGroup>
           <FormGroup label="Email">
             <InputGroup
               placeholder="e.g. john.doe@site.com"
               type="email"
+              name="email"
               required={true}
             />
           </FormGroup>
@@ -88,6 +103,9 @@ class CreateCourseForm extends React.Component<
             />
           </ButtonGroup>
         </form>
+        <Toaster position={Position.BOTTOM} ref={this.refHandlers.toaster}>
+          {}
+        </Toaster>
       </div>
     );
   }
@@ -123,7 +141,20 @@ class CreateCourseForm extends React.Component<
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formDataToJSON(formData);
-    // TODO: send to backend
+    fetchit(
+      '',
+      'PUT',
+      formDataToJSON(formData),
+      (uuid: string) => {
+        this.props.history.push(`/${uuid}`);
+      },
+      reason =>
+        this.toaster.show({
+          icon: 'error',
+          intent: 'danger',
+          message: `A course could not be created: ${reason}. Please try again.`,
+        }),
+    );
   }
 
   private schoolFilter: ItemPredicate<ISchool> = (

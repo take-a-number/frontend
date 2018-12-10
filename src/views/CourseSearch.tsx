@@ -6,9 +6,9 @@ import {
 } from '@blueprintjs/select';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import fetchit from 'src/util/fetchit';
-import { highlightText } from 'src/util/Select';
 import { ICourse } from '../models/course';
+import fetchit from '../util/fetchit';
+import { highlightText } from '../util/Select';
 
 interface ICourseSearchState {
   courses: ICourse[];
@@ -20,6 +20,7 @@ class CourseSearch extends React.Component<
 > {
   private CourseSuggest = Suggest.ofType<ICourse>();
   private noResults = <MenuItem disabled={true} text="No courses found..." />;
+  private controller = new AbortController();
 
   public constructor(props: RouteComponentProps<any>) {
     super(props);
@@ -31,9 +32,13 @@ class CourseSearch extends React.Component<
   }
 
   public componentDidMount() {
-    fetchit('/', 'GET', undefined, (courses: ICourse[]) =>
+    fetchit(this.controller, '/', 'GET', undefined, (courses: ICourse[]) =>
       this.setState({ courses }),
     );
+  }
+
+  public componentWillUnmount() {
+    this.controller.abort();
   }
 
   public render() {

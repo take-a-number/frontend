@@ -15,11 +15,11 @@ import {
 } from '@blueprintjs/select';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { mockSchools } from 'src/models/mock/school';
-import { ISchool } from 'src/models/school';
-import fetchit from 'src/util/fetchit';
-import { formDataToJSON } from 'src/util/form';
-import { highlightText } from 'src/util/Select';
+import { mockSchools } from '../models/mock/school';
+import { ISchool } from '../models/school';
+import fetchit from '../util/fetchit';
+import { formDataToJSON } from '../util/form';
+import { highlightText } from '../util/Select';
 
 interface ICreateCourseFormState {
   schools: ISchool[];
@@ -36,6 +36,7 @@ class CreateCourseForm extends React.Component<
   };
   private SchoolSuggest = Suggest.ofType<ISchool>();
   private noResults = <MenuItem disabled={true} text="No schools found..." />;
+  private controller = new AbortController();
 
   public constructor(props: RouteComponentProps<any>) {
     super(props);
@@ -48,6 +49,10 @@ class CreateCourseForm extends React.Component<
       schools: mockSchools,
       selectedSchool: mockSchools.length > 0 ? mockSchools[0] : undefined,
     });
+  }
+
+  public componentWillUnmount() {
+    this.controller.abort();
   }
 
   public render() {
@@ -142,6 +147,7 @@ class CreateCourseForm extends React.Component<
     const formData = new FormData(event.currentTarget);
     formDataToJSON(formData);
     fetchit(
+      this.controller,
       '',
       'PUT',
       formDataToJSON(formData),

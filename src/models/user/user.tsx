@@ -1,4 +1,4 @@
-import fetchit from 'src/util/fetchit';
+import fetchit from '../../util/fetchit';
 
 enum EUserType {
   TeachingAssistant = 'teaching_assistant',
@@ -12,10 +12,12 @@ interface IUser {
 }
 
 const fetchIdentity = (
+  controller: AbortController,
   courseId: string,
   onSuccess: (self: IUser) => void,
 ) =>
   fetchit(
+    controller,
     `/${courseId}/office_hours/identity`,
     'GET',
     undefined,

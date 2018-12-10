@@ -1,5 +1,7 @@
 import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
+import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
+import 'babel-polyfill';
 import 'normalize.css/normalize.css';
 import * as React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';

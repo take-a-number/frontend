@@ -1,8 +1,9 @@
-import { API_ENDPOINT } from 'src/conf';
+import { API_ENDPOINT } from '../conf';
 
 type httpmethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 function fetchit<B, R>(
+  controller: AbortController,
   route: string,
   method: httpmethod,
   body: B | undefined,
@@ -16,12 +17,17 @@ function fetchit<B, R>(
       'Content-type': 'application/json',
     },
     method,
+    signal: controller.signal,
   }).then(res => res.json());
   if (!!onSuccess) {
     fetchCall = fetchCall.then((ret: R) => onSuccess(ret));
   }
   if (!!onFailure) {
     fetchCall = fetchCall.catch((reason: any) => onFailure(reason));
+  } else { // Not handling the error, so it shouldn't go anywhere
+    fetchCall = fetchCall.catch((reason: any) => {
+      return;
+    });
   }
   return fetchCall;
 }

@@ -16,13 +16,13 @@ import {
 } from '@blueprintjs/core';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
-import { mockOfficeHours } from 'src/models/mock/officeHours';
-import { IStudent } from 'src/models/user/student';
-import { ITeachingAssistant } from 'src/models/user/teachingAssistant';
-import { EUserType, fetchIdentity, IUser } from 'src/models/user/user';
-import fetchit from 'src/util/fetchit';
-import { formDataToJSON } from 'src/util/form';
+import { mockOfficeHours } from '../models/mock/officeHours';
 import { fetchOfficeHours, IOfficeHours } from '../models/officeHours';
+import { IStudent } from '../models/user/student';
+import { ITeachingAssistant } from '../models/user/teachingAssistant';
+import { EUserType, fetchIdentity, IUser } from '../models/user/user';
+import fetchit from '../util/fetchit';
+import { formDataToJSON } from '../util/form';
 
 interface ICourseOfficeHoursState {
   officeHours?: IOfficeHours;
@@ -37,6 +37,8 @@ class CourseView extends React.Component<
   private refHandlers = {
     toaster: (ref: Toaster) => (this.toaster = ref),
   };
+  private controller = new AbortController();
+  private interval: NodeJS.Timeout;
 
   constructor(props: RouteComponentProps<any>) {
     super(props);
@@ -54,14 +56,23 @@ class CourseView extends React.Component<
   }
 
   public componentDidMount() {
-    fetchIdentity(this.props.match.params.courseId, identity =>
+    fetchIdentity(this.controller, this.props.match.params.courseId, identity =>
       this.setState({ identity }),
     );
-    setInterval(() => {
-      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-        this.setState({ officeHours }),
+    this.interval = setInterval(() => {
+      fetchOfficeHours(
+        this.controller,
+        this.props.match.params.courseId,
+        officeHours => this.setState({ officeHours }),
       );
-    }, 500);
+    }, 1000);
+  }
+
+  public componentWillUnmount() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+    this.controller.abort();
   }
 
   public render() {
@@ -257,12 +268,15 @@ class CourseView extends React.Component<
       return;
     }
     fetchit(
+      this.controller,
       `/${this.props.match.params.courseId}/office_hours/students`,
       'PUT',
       undefined,
     ).then(() =>
-      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-        this.setState({ officeHours }),
+      fetchOfficeHours(
+        this.controller,
+        this.props.match.params.courseId,
+        officeHours => this.setState({ officeHours }),
       ),
     );
   }
@@ -272,12 +286,15 @@ class CourseView extends React.Component<
       return;
     }
     fetchit(
+      this.controller,
       `/${this.props.match.params.courseId}/office_hours/students`,
       'DELETE',
       undefined,
     ).then(() =>
-      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-        this.setState({ officeHours }),
+      fetchOfficeHours(
+        this.controller,
+        this.props.match.params.courseId,
+        officeHours => this.setState({ officeHours }),
       ),
     );
   }
@@ -304,12 +321,15 @@ class CourseView extends React.Component<
       return;
     }
     fetchit(
+      this.controller,
       `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
       'POST',
       this.state.officeHours.students[0],
     ).then(() =>
-      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-        this.setState({ officeHours }),
+      fetchOfficeHours(
+        this.controller,
+        this.props.match.params.courseId,
+        officeHours => this.setState({ officeHours }),
       ),
     );
   }
@@ -335,6 +355,7 @@ class CourseView extends React.Component<
     }
     const formData = new FormData(event.currentTarget);
     fetchit(
+      this.controller,
       `/${this.props.match.params.courseId}/office_hours`,
       'PUT',
       formDataToJSON(formData),
@@ -347,13 +368,17 @@ class CourseView extends React.Component<
         }),
     )
       .then(() =>
-        fetchIdentity(this.props.match.params.courseId, identity =>
-          this.setState({ identity }),
+        fetchIdentity(
+          this.controller,
+          this.props.match.params.courseId,
+          identity => this.setState({ identity }),
         ),
       )
       .then(() =>
-        fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-          this.setState({ officeHours }),
+        fetchOfficeHours(
+          this.controller,
+          this.props.match.params.courseId,
+          officeHours => this.setState({ officeHours }),
         ),
       );
   }
@@ -363,12 +388,15 @@ class CourseView extends React.Component<
       return;
     }
     fetchit(
+      this.controller,
       `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
       'PUT',
       undefined,
     ).then(() =>
-      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-        this.setState({ officeHours }),
+      fetchOfficeHours(
+        this.controller,
+        this.props.match.params.courseId,
+        officeHours => this.setState({ officeHours }),
       ),
     );
   }
@@ -378,12 +406,15 @@ class CourseView extends React.Component<
       return;
     }
     fetchit(
+      this.controller,
       `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
       'DELETE',
       undefined,
     ).then(() =>
-      fetchOfficeHours(this.props.match.params.courseId, officeHours =>
-        this.setState({ officeHours }),
+      fetchOfficeHours(
+        this.controller,
+        this.props.match.params.courseId,
+        officeHours => this.setState({ officeHours }),
       ),
     );
   }

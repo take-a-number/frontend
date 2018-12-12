@@ -42,6 +42,7 @@ class CreateCourseForm extends React.Component<
     super(props);
     this.state = { schools: [] };
     this.onSchoolSelect = this.onSchoolSelect.bind(this);
+    this.onCreateCourseFormSubmit = this.onCreateCourseFormSubmit.bind(this);
   }
 
   public componentDidMount() {

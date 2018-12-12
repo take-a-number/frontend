@@ -153,7 +153,7 @@ class CreateCourseForm extends React.Component<
       'PUT',
       formDataToJSON(formData),
       (uuid: string) => {
-        this.props.history.push(`/${uuid}`);
+        this.props.history.push(`/course/officeHours/${uuid}`);
       },
       reason =>
         this.toaster.show({

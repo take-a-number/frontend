@@ -58,6 +58,7 @@ class CourseSearch extends React.Component<
           />
           <Button
             intent="primary"
+            disabled={true}
             className="new-course"
             onClick={this.onCreateCourseClick}
             icon="folder-new"

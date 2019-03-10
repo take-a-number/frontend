@@ -65,6 +65,9 @@ class CourseView extends React.Component<
         this.props.match.params.courseId,
         officeHours => this.setState({ officeHours }),
       );
+      fetchIdentity(this.controller, this.props.match.params.courseId, identity =>
+        this.setState({ identity }),
+      );
     }, 1000);
   }
 
@@ -156,7 +159,7 @@ class CourseView extends React.Component<
                 className={applySkele()}
                 intent="primary"
                 onClick={this.pollQueue}
-                disabled={this.state.officeHours.students.length === 0 && (this.state.identity as ITeachingAssistant).helping === undefined}
+                disabled={this.state.officeHours.students.length === 0 && !(this.state.identity as ITeachingAssistant).helping}
                 text="Next Student"
               />
             )}
@@ -318,7 +321,7 @@ class CourseView extends React.Component<
       return;
     }
 
-    if (this.state.officeHours.students.length === 0 && (this.state.identity as ITeachingAssistant).helping === undefined) {
+    if (this.state.officeHours.students.length === 0 && !(this.state.identity as ITeachingAssistant).helping) {
       return;
     }
     fetchit(

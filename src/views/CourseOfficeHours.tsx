@@ -156,7 +156,7 @@ class CourseView extends React.Component<
                 className={applySkele()}
                 intent="primary"
                 onClick={this.pollQueue}
-                disabled={this.state.officeHours.students.length === 0}
+                disabled={this.state.officeHours.students.length === 0 && (this.state.identity as ITeachingAssistant).helping === undefined}
                 text="Next Student"
               />
             )}
@@ -314,17 +314,18 @@ class CourseView extends React.Component<
   }
 
   private pollQueue() {
-    if (
-      !this.state.officeHours ||
-      this.state.officeHours.students.length === 0
-    ) {
+    if (!this.state.officeHours || !this.state.identity) {
+      return;
+    }
+
+    if (this.state.officeHours.students.length === 0 && (this.state.identity as ITeachingAssistant).helping === undefined) {
       return;
     }
     fetchit(
       this.controller,
       `/${this.props.match.params.courseId}/office_hours/teaching_assistants`,
       'POST',
-      this.state.officeHours.students[0],
+      this.state.officeHours.students.length === 0 ? '' : this.state.officeHours.students[0],
     ).then(() =>
       fetchOfficeHours(
         this.controller,
